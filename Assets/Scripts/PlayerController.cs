@@ -7,24 +7,14 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    //ADDITIONS
-    //third person camera (camera controller?)
-    //health and display it
-    //weapon and atk anim
-
-    // Start is called before the first frame update
     private Rigidbody rb;
     private float movementX;
     private float movementY;
     public float speed = 0;
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
-    //additions
-    public float playerHealth;
-    public float playerDamage;
 
-    private bool takeDamage;
-
+    private float pushForce;
     private int count;
     void Start()
     {
@@ -60,6 +50,21 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
+        }    
+        if (other.gameObject.CompareTag("PushtoButton"))
+        {
+            winTextObject.SetActive(true);
         }
     }
+    void OnCollisionEnter(Collision coll)
+    {
+        //Rigidbody rb = canPush.collider.attachedRigidbody;
+        if (coll.gameObject.CompareTag("canPush"))
+        {
+            Vector3 movement = new Vector3(movementX, 0.0f, movementY);
+            rb.AddForce(movement * pushForce);
+        }
+    }
+
+
 }
