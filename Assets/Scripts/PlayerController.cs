@@ -50,11 +50,7 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
-        }    
-        if (other.gameObject.CompareTag("PushtoButton"))
-        {
-            winTextObject.SetActive(true);
-        }
+        }           
     }
     void OnCollisionEnter(Collision coll)
     {
@@ -65,6 +61,4 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(movement * pushForce);
         }
     }
-
-
 }
