@@ -13,9 +13,11 @@ public class PlayerController : MonoBehaviour
     public float speed = 0;
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
+    public bool cubeIsOnTheGround = true;
+    private Vector3 scaleChange, positionChange;
 
-    private float pushForce;
     private int count;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
         SetCountText();
         winTextObject.SetActive(false);
     }
+
     void OnMove (InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
@@ -30,6 +33,7 @@ public class PlayerController : MonoBehaviour
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
+
     void SetCountText()
     {
         countText.text = "Count: " + count.ToString();
@@ -37,12 +41,33 @@ public class PlayerController : MonoBehaviour
         {
             winTextObject.SetActive(true);
         }
+    }   
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        //makes sure cube is on the ground before bounce is triggered
+        if (collision.gameObject.tag == "Ground")
+        {
+            cubeIsOnTheGround = true;
+        }
+        //bounces cube on Y axis
+        if (collision.gameObject.CompareTag("BounceButton"))
+        {
+            rb.AddForce(new Vector3(0, 8, 0), ForceMode.Impulse);
+            cubeIsOnTheGround = false;
+        }
+        if (collision.gameObject.CompareTag("BoostButton"))
+        {
+            rb.AddForce(new Vector3(0, 0, 8), ForceMode.Impulse);
+        }
     }
+
     private void FixedUpdate()
     {
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-        rb.AddForce(movement * speed);         
+        rb.AddForce(movement * speed);
     }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PickUp"))
@@ -50,15 +75,6 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             count = count + 1;
             SetCountText();
-        }           
-    }
-    void OnCollisionEnter(Collision coll)
-    {
-        //Rigidbody rb = canPush.collider.attachedRigidbody;
-        if (coll.gameObject.CompareTag("canPush"))
-        {
-            Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-            rb.AddForce(movement * pushForce);
-        }
+        }      
     }
 }
