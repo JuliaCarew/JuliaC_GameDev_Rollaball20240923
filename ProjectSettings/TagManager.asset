@@ -8,6 +8,8 @@ TagManager:
   - BounceButton
   - Ground
   - BoostButton
+  - OutOfBounds
+  - StartPosition
   layers:
   - Default
   - TransparentFX
