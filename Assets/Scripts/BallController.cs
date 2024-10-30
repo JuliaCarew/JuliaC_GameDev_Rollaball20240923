@@ -1,64 +1,81 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-//using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 public class BallController : MonoBehaviour
 {
+    // Important GameObjects
     public GameObject ball;
     public Rigidbody rb_ball;
+    public GameObject BowlingPin;
     public GameObject aimGuide;
+    // UI
     public TextMeshProUGUI ScoreSheet;
     public GameObject winTextObject;
     public GameObject holdKeyObject;
-    public Text accuracyText;
+    public GameObject accuracyText;
+
+    [SerializeField] TextMeshProUGUI Frame1A;
+    [SerializeField] TextMeshProUGUI Frame1B;
+    [SerializeField] TextMeshProUGUI Frame1T;
+
+    // Variables
     public bool ballStopped;
-    public float speed = 0; 
-    private int score;
-    private int throws;
-    private float ballVeloityMagnitude;
+    public float speed = 0.09f;
+    Vector3 lastPosition = Vector3.zero;
+    //score vriables
+    public int score;
+    public int frameTotal;
+    public int throws;
+    public int frame;
+    //private float ballVeloityMagnitude;
     public bool heldKey;
     public float holdDuration = 0;
-    private float accuracy = 55;
+    private float accuracy;
     public bool pinDown;
 
     private Vector3 scaleChange, positionChange;
 
-    // Start is called before the first frame update
     private void Start()
     {
         ballStopped = true;
         score = 0;
         throws = 0;
-        SetScoreText();
         winTextObject.SetActive(false);
         holdKeyObject.SetActive(false); //somehow always displaying??
         pinDown = false;
     }
-    // Update is called once per frame
     void Update()
     {
         ballShoot();
-        if (throws == 2)
+        ScoreUpdate();
+        if (throws == 2) // reset pins & ball, move to next frame
         {
             ResetAll();
         }
+        if (frame == 10) // When you play 10 frames, add score + show accuracy
+        {
+            GameOver();
+        }
+        speed = (transform.position - lastPosition).magnitude;
+        lastPosition = transform.position;
     }
     private void OnTriggerEnter(Collider other)
-    {
+    {   // reset ball position if out of bounds
         if(other.gameObject.tag == "OutOfBounds")
         {
             Debug.Log("Out of Bounds");
             SetBallToStart();
             ballStopped = true;
-
+            throws++;         
         }        
     }
     private void OnCollisionEnter(Collision collision)
-    {
+    {   // if collide w pin, check if pin is down (++score)
         if (collision.gameObject.tag == "Pin")
         {
             Debug.Log("Hit pin");
@@ -67,32 +84,24 @@ public class BallController : MonoBehaviour
         }
     }
     private void ballShoot()
-    {
+    {   // shoot ball is press space
         if (Input.GetKeyDown("space") && holdDuration < 5f)
         {
             ballStopped = false;
             rb_ball.AddForce(new Vector3(0, 0, 50), ForceMode.Impulse);
             heldKey = false;
-            throws++;
         }
         //set up hold shoot - display ui w it
         else 
         {
-            ballStopped = false;
+            ballStopped = true;
             heldKey = true;
             //holdKeyObject.SetActive(true);
             //Add multiplicative force to rb_ball * holdDuration ? 
         }
-    }
-    void SetScoreText()
-    {
-        //ScoreSheet.text = "TEST" + score.ToString();
-        //rounds = 10 at the end of the game
-        if (score > 10)
+        if(rb_ball.velocity.magnitude < speed)
         {
-            winTextObject.SetActive(true);
-            accuracy = (score / 300) * 100;
-            accuracyText.text = accuracy.ToString();
+            SetBallToStart();
         }
     }
     public void SetBallToStart() //not triggering
@@ -104,10 +113,44 @@ public class BallController : MonoBehaviour
     public void ResetAll()
     {
         SetBallToStart();
-        Vector3 orginalPosition = GameObject.FindWithTag("Pin").transform.position;
-        gameObject.transform.position = orginalPosition;
+        var Pins = GameObject.FindGameObjectsWithTag("Pin");
+        foreach (GameObject BowlingPin in Pins)
+        {
+            BowlingPin.SetActive(false);
+        }
+        //Vector3 orginalPosition = GameObject.FindWithTag("Pin").transform.position;
+        //gameObject.transform.position = orginalPosition;
         throws = 0;
+        frame++;
+    }
+    public void GameOver()
+    {
+        ResetAll();
+        winTextObject.SetActive(true);
+        accuracy = (score / 300) * 100;
+        //accuracyText = accuracy; // need to convert the float to gameobject ??
+        accuracyText.SetActive(true);
+    }
+
+    public void ScoreUpdate()
+    {
+        // get char from current frame
+        // replace char with current score
+        //move to next char
+        //parse string to convert it to int to be added later
+        static int ParseString(string Frame1A)
+        {
+            int num = 0;
+            num = int.Parse(Frame1A);
+            return num;
+        }
+       
+        Frame1A.text = $"{score}";
+        Frame1B.text = $"{score}";
+        // int frametotal is frame A + B
+        //frameTotal = Frame1A + Frame1B;
+        // other frametotals are previous frametotal plus current frametotal
+        Frame1T.text = $"{score}";
     }
 }
-//if ball velocity reaches certain point, resetposition
-//reset pins after 2 throws
+//if ball velocity reaches certain point, reset position (it gets too slow before reset is recognized)
