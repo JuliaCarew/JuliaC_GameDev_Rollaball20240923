@@ -1088,7 +1088,7 @@ PrefabInstance:
     - target: {fileID: 2211441830476759015, guid: 863a0a62df699804d81303905348274b,
         type: 3}
       propertyPath: m_Name
-      value: Frame1B
+      value: Frame3B
       objectReference: {fileID: 0}
     - target: {fileID: 3245157733053563736, guid: 863a0a62df699804d81303905348274b,
         type: 3}
@@ -1286,7 +1286,7 @@ PrefabInstance:
     - target: {fileID: 1294816264565273159, guid: 58e74667a831cd648a17d5a26680c00d,
         type: 3}
       propertyPath: m_Name
-      value: Frame1T
+      value: Frame2T
       objectReference: {fileID: 0}
     - target: {fileID: 5287486995653980268, guid: 58e74667a831cd648a17d5a26680c00d,
         type: 3}
@@ -1675,7 +1675,7 @@ PrefabInstance:
     - target: {fileID: 2211441830476759015, guid: 863a0a62df699804d81303905348274b,
         type: 3}
       propertyPath: m_Name
-      value: Frame1B
+      value: Frame2B
       objectReference: {fileID: 0}
     - target: {fileID: 3245157733053563736, guid: 863a0a62df699804d81303905348274b,
         type: 3}
@@ -6190,7 +6190,7 @@ PrefabInstance:
     - target: {fileID: 2922816965430220261, guid: f2837784746125b4f9df146da092ba16,
         type: 3}
       propertyPath: m_Name
-      value: Frame1A
+      value: Frame3A
       objectReference: {fileID: 0}
     - target: {fileID: 5940257416269930176, guid: f2837784746125b4f9df146da092ba16,
         type: 3}
@@ -7680,7 +7680,7 @@ PrefabInstance:
     - target: {fileID: 2922816965430220261, guid: f2837784746125b4f9df146da092ba16,
         type: 3}
       propertyPath: m_Name
-      value: Frame1A
+      value: Frame2A
       objectReference: {fileID: 0}
     - target: {fileID: 5940257416269930176, guid: f2837784746125b4f9df146da092ba16,
         type: 3}
@@ -8336,7 +8336,7 @@ PrefabInstance:
     - target: {fileID: 1294816264565273159, guid: 58e74667a831cd648a17d5a26680c00d,
         type: 3}
       propertyPath: m_Name
-      value: Frame1T
+      value: Frame3T
       objectReference: {fileID: 0}
     - target: {fileID: 5287486995653980268, guid: 58e74667a831cd648a17d5a26680c00d,
         type: 3}
@@ -11400,6 +11400,7 @@ MonoBehaviour:
   Frame1A: {fileID: 4738112475005910743, guid: f2837784746125b4f9df146da092ba16, type: 3}
   Frame1B: {fileID: 513494880621252768, guid: 863a0a62df699804d81303905348274b, type: 3}
   Frame1T: {fileID: 3067469298751287997, guid: 58e74667a831cd648a17d5a26680c00d, type: 3}
+  ScoreBoardCanvas: {fileID: 231513462}
   ballStopped: 1
   speed: 10
   score: 0

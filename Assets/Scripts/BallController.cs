@@ -23,6 +23,7 @@ public class BallController : MonoBehaviour
     [SerializeField] TextMeshProUGUI Frame1B;
     [SerializeField] TextMeshProUGUI Frame1T;
 
+    public GameObject ScoreBoardCanvas;
     // Variables
     public bool ballStopped;
     public float speed = 0.09f;
@@ -144,13 +145,17 @@ public class BallController : MonoBehaviour
             num = int.Parse(Frame1A);
             return num;
         }
-       
-        Frame1A.text = $"{score}";
-        Frame1B.text = $"{score}";
-        // int frametotal is frame A + B
-        //frameTotal = Frame1A + Frame1B;
-        // other frametotals are previous frametotal plus current frametotal
-        Frame1T.text = $"{score}";
+
+        Transform found = ScoreBoardCanvas.transform.Find("FrameScores/Frame 2/Frame2A");
+        if (found && found.TryGetComponent<TextMeshProUGUI>(out var frametext)) {
+            frametext.text = "Test";
+        }
+        //Frame1A.text = $"{score}";
+        //Frame1B.text = $"{score}";
+        //// int frametotal is frame A + B
+        ////frameTotal = Frame1A + Frame1B;
+        //// other frametotals are previous frametotal plus current frametotal
+        //Frame1T.text = $"{score}";
     }
 }
 //if ball velocity reaches certain point, reset position (it gets too slow before reset is recognized)
