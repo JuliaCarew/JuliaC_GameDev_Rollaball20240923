@@ -18,6 +18,7 @@ public class BallController : MonoBehaviour
     public GameObject winTextObject;
     public GameObject holdKeyObject;
     public GameObject accuracyText;
+    public GameObject TitleScreen;
 
     [SerializeField] TextMeshProUGUI Frame1A;
     [SerializeField] TextMeshProUGUI Frame1B;
@@ -48,6 +49,8 @@ public class BallController : MonoBehaviour
         throws = 0;
         winTextObject.SetActive(false);
         holdKeyObject.SetActive(false); //somehow always displaying??
+        TitleScreen.SetActive(false);
+
         pinDown = false;
     }
     void Update()

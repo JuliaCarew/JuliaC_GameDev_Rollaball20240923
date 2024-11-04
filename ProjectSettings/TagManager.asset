@@ -11,6 +11,8 @@ TagManager:
   - OutOfBounds
   - StartPosition
   - Pin
+  - StartButton
+  - QuitButton
   layers:
   - Default
   - TransparentFX
