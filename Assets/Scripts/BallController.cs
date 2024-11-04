@@ -19,7 +19,7 @@ public class BallController : MonoBehaviour
     public GameObject holdKeyObject;
     public GameObject accuracyText;
     public GameObject TitleScreen;
-
+    // Score UI
     [SerializeField] TextMeshProUGUI Frame1A;
     [SerializeField] TextMeshProUGUI Frame1B;
     [SerializeField] TextMeshProUGUI Frame1T;
@@ -27,14 +27,14 @@ public class BallController : MonoBehaviour
     public GameObject ScoreBoardCanvas;
     // Variables
     public bool ballStopped;
-    public float speed = 0.09f;
+    //public float speed = Vector3.Magnitude(rb_ball.velocity); !!!
     Vector3 lastPosition = Vector3.zero;
-    //score vriables
+    // score vriables
     public int score;
     public int frameTotal;
     public int throws;
     public int frame;
-    //private float ballVeloityMagnitude;
+    // hold key variables
     public bool heldKey;
     public float holdDuration = 0;
     private float accuracy;
@@ -48,7 +48,7 @@ public class BallController : MonoBehaviour
         score = 0;
         throws = 0;
         winTextObject.SetActive(false);
-        holdKeyObject.SetActive(false); //somehow always displaying??
+        holdKeyObject.SetActive(false);
         TitleScreen.SetActive(false);
 
         pinDown = false;
@@ -65,7 +65,6 @@ public class BallController : MonoBehaviour
         {
             GameOver();
         }
-        speed = (transform.position - lastPosition).magnitude;
         lastPosition = transform.position;
     }
     private void OnTriggerEnter(Collider other)
@@ -103,10 +102,10 @@ public class BallController : MonoBehaviour
             //holdKeyObject.SetActive(true);
             //Add multiplicative force to rb_ball * holdDuration ? 
         }
-        if(rb_ball.velocity.magnitude < speed)
-        {
-            SetBallToStart();
-        }
+        //if(speed < 1f) !!!
+        //{
+        //    SetBallToStart();
+        //}
     }
     public void SetBallToStart() //not triggering
     {
@@ -115,7 +114,7 @@ public class BallController : MonoBehaviour
         rb_ball.transform.rotation = startPosition.transform.rotation;
     }
     public void ResetAll()
-    {
+    { // delete all pins
         SetBallToStart();
         var Pins = GameObject.FindGameObjectsWithTag("Pin");
         foreach (GameObject BowlingPin in Pins)
@@ -141,6 +140,7 @@ public class BallController : MonoBehaviour
         // get char from current frame
         // replace char with current score
         //move to next char
+
         //parse string to convert it to int to be added later
         static int ParseString(string Frame1A)
         {
