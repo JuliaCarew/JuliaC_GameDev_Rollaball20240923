@@ -13,6 +13,7 @@ TagManager:
   - Pin
   - StartButton
   - QuitButton
+  - Aim
   layers:
   - Default
   - TransparentFX

@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     public GameObject TitleScreen;
-    public Button StartButton;
+    public GameObject StartButton;
+    public GameObject QuitButton;
     public GameObject GameOverScreen;
     public GameObject GameOverText;
 
@@ -17,6 +18,8 @@ public class SceneLoader : MonoBehaviour
         TitleScreen.SetActive(true);
         GameOverScreen.SetActive(false);
         GameOverText.SetActive(false);
+        StartButton.SetActive(false);
+        QuitButton.SetActive(false);
     }
     public void QuitGame()
     {
