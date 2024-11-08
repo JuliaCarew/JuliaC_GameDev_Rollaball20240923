@@ -16,10 +16,11 @@ public class SceneLoader : MonoBehaviour
     void Start()
     {
         TitleScreen.SetActive(true);
+        StartButton.SetActive(true);
+        QuitButton.SetActive(true);
+
         GameOverScreen.SetActive(false);
         GameOverText.SetActive(false);
-        StartButton.SetActive(false);
-        QuitButton.SetActive(false);
     }
     public void QuitGame()
     {
@@ -28,9 +29,8 @@ public class SceneLoader : MonoBehaviour
     }
     public void StartGame()
     {
-        TitleScreen.SetActive(false);
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene("SampleScene");
+        Debug.Log("StartGame()");
     }
     public void GameOver()
     {

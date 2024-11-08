@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BallController : MonoBehaviour
 {
@@ -19,12 +19,12 @@ public class BallController : MonoBehaviour
     public GameObject winTextObject;
     public GameObject holdKeyObject;
     public GameObject accuracyText;
-    public GameObject TitleScreen;
-    public GameObject StartButton;
-    public GameObject QuitButton;
-    public GameObject StartText;
-    public GameObject QuitText;
-    public GameObject TitleText;
+    //public GameObject TitleScreen;
+    //public GameObject StartButton;
+    //public GameObject QuitButton;
+    //public GameObject StartText;
+    //public GameObject QuitText;
+    //public GameObject TitleText;
 
     // Score UI
     [SerializeField] TextMeshProUGUI Frame1A;
@@ -53,7 +53,6 @@ public class BallController : MonoBehaviour
 
     private void Start()
     {
-        MenuUI();
         ballStopped = true;
         score = 0;
         throws = 0;
@@ -63,10 +62,6 @@ public class BallController : MonoBehaviour
         Transform Aim = GameObject.FindWithTag("Aim").transform;
 
         pinDown = false;
-        if (Input.GetKeyDown("enter"))
-        {
-            StartGame();
-        }
     }
     void Update()
     {
@@ -179,7 +174,8 @@ public class BallController : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
 
         // Smoothly interpolate between the current rotation and the target rotation
-        Aim.transform.rotation = Quaternion.Slerp(Aim.transform.rotation, targetRotation, Time.deltaTime * 50f);
+        Aim.transform.rotation = Quaternion.Slerp
+            (Aim.transform.rotation, targetRotation, Time.deltaTime * 50f);
     }
     public void ScoreUpdate()
     {
@@ -205,28 +201,6 @@ public class BallController : MonoBehaviour
         ////frameTotal = Frame1A + Frame1B;
         //// other frametotals are previous frametotal plus current frametotal
         //Frame1T.text = $"{score}";
-    }
-    public void MenuUI()
-    {
-        TitleScreen.SetActive(true);
-        StartText.SetActive(true);
-        QuitText.SetActive(true);
-        TitleText.SetActive(true);
-        StartButton.SetActive(true);
-        QuitButton.SetActive(true);
-
-        Debug.Log("MenuUI()");
-    }
-    public void StartGame()
-    {
-        TitleScreen.SetActive(false);
-        StartText.SetActive(false);
-        QuitText.SetActive(false);
-        TitleText.SetActive(false);
-        StartButton.SetActive(false);
-        QuitButton.SetActive(false);
-
-        Debug.Log("StartGame()");
     }
 }
 //if ball velocity reaches certain point, reset position (it gets too slow before reset is recognized)
