@@ -29,8 +29,8 @@ public class SceneLoader : MonoBehaviour
     }
     public void StartGame()
     {
-        SceneManager.LoadScene("SampleScene");
-        Debug.Log("StartGame()");
+        SceneManager.LoadScene(1);
+        Debug.Log("StartGame");
     }
     public void GameOver()
     {

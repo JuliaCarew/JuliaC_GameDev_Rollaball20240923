@@ -6,6 +6,8 @@ public class AimGuideController : MonoBehaviour
 {
     private void Update()
     {
+        // so far, it's only transforming based on arrow pressed, it doesnt affect the ball yet
+        // needs to be raycasted for real-time updates from the mouse?
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             transform.Rotate(Vector3.down, Time.deltaTime * 30f);
@@ -39,6 +41,19 @@ public class AimGuideController : MonoBehaviour
             }
         }
     }
+    /*public void AimGuide()
+  {   // previously in ballcontroller, camera followed ball (needed cinemachine brain too)
+      // Get the direction the camera is facing, constrained to the Y-axis only
+      Vector3 cameraForward = Camera.main.transform.forward;
+      cameraForward.y = 0; 
+
+      // Calculate the new rotation that matches the camera's facing direction
+      Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
+
+      // Smoothly interpolate between the current rotation and the target rotation
+      Aim.transform.rotation = Quaternion.Slerp
+          (Aim.transform.rotation, targetRotation, Time.deltaTime * 50f);
+  }*/
     /*
     // References
     [SerializeField] private PlayerController _playerController;

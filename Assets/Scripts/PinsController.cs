@@ -1,30 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PinsController : MonoBehaviour
 {
     public GameObject BowlingPin;
-    void Start()
-    {
-        
-    }
+    public GameObject Player;
 
-    void Update()
-    {
-        
-    }
+    public static int score = 0;
+
     private void OnTriggerEnter(Collider other)
-    {   // reset ball position if out of bounds
+    {   
         var Pins = GameObject.FindGameObjectsWithTag("Pin");
+        var Player = GameObject.FindGameObjectWithTag("Player");
 
-        //foreach (GameObject BowlingPin in Pins)
-        //{
-            if (other.gameObject.tag == "OutOfBounds")
+
+        if (other.gameObject.tag == "OutOfBounds")
+        {
+            //Debug.Log("Out of Bounds");
+            BowlingPin.SetActive(false);
+        }
+        foreach (GameObject BowlingPin in Pins)
+        {
+            // if collide w pin, check if pin is down (++score)/ score is not counting properly
+            if (other.gameObject.tag == "Player")
             {
-                Debug.Log("Out of Bounds");
-                BowlingPin.SetActive(false);
+                Debug.Log("Hit pin");
+                score++;
             }
-        //}      
+        }
+       
     }
 }

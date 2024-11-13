@@ -5,22 +5,16 @@ using Cinemachine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject VCamGameplay;
-    //public GameObject VCamMainMenu;
+    public GameObject player;
 
-    public CinemachineBrain cinemachineBrain;
+    public float sensitivity;
+    public float lookXLimit = 45.0f;
 
-    public CinemachineFreeLook freeLook;
-    public Transform lookAt;
-
-    public Vector3 cameraPositionOffset = new Vector3(0, 5, -10);
-
-    public void EnableCameraRotation()
+    private void FixedUpdate()
     {
-        VCamGameplay.SetActive(true);
-    }
-    public void SetCameraOrientation(Vector3 targetOrientation)
-    {
-        VCamGameplay.transform.LookAt(targetOrientation);
+        float rotateHorizontal = Input.GetAxis("Mouse X");
+        float rotateVertical = Input.GetAxis("Mouse Y");
+        transform.RotateAround(player.transform.position, -Vector3.up, rotateHorizontal * sensitivity); 
+        transform.RotateAround(Vector3.zero, transform.right, rotateVertical * sensitivity); 
     }
 }

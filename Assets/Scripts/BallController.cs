@@ -15,67 +15,44 @@ public class BallController : MonoBehaviour
     public GameObject Aim;
     // private Transform Aim;
     // UI
-    public TextMeshProUGUI ScoreSheet;
     public GameObject winTextObject;
     public GameObject holdKeyObject;
-    public GameObject accuracyText;
-    //public GameObject TitleScreen;
-    //public GameObject StartButton;
-    //public GameObject QuitButton;
-    //public GameObject StartText;
-    //public GameObject QuitText;
-    //public GameObject TitleText;
 
-    // Score UI
-    [SerializeField] TextMeshProUGUI Frame1A;
-    [SerializeField] TextMeshProUGUI Frame1B;
-    [SerializeField] TextMeshProUGUI Frame1T;
-
-    public GameObject ScoreBoardCanvas;
     // Variables
     public bool ballStopped;
     public float ballMagnitudeStopThreshold = 0.1f;
     public float ballStopCheckDelay = 0.5f;
     public float speed; // = Vector3.Magnitude(rb_ball.velocity); !!!
     Vector3 lastPosition = Vector3.zero;
-    // score vriables
-    public int score;
-    public int frameTotal;
-    public int throws;
-    public int frame;
+    
     // hold key variables
     public bool heldKey;
     public float holdDuration = 0;
-    private float accuracy;
-    public bool pinDown;
 
     private Vector3 scaleChange, positionChange;
 
     private void Start()
     {
         ballStopped = true;
-        score = 0;
-        throws = 0;
+
         winTextObject.SetActive(false);
         holdKeyObject.SetActive(false);
 
         Transform Aim = GameObject.FindWithTag("Aim").transform;
 
-        pinDown = false;
     }
     void Update()
     {
         // ballVelocityMagnitude = rb_ball.velocity.magnitude;
         ballShoot();
-        ScoreUpdate();
-        if (throws == 2) // reset pins & ball, move to next frame
+       /* if (throws == 2) // reset pins & ball, move to next frame
         {
             ResetAll();
         }
         if (frame == 10) // When you play 10 frames, add score + show accuracy
         {
             GameOver();
-        }
+        }*/
         lastPosition = transform.position;
     }
     private void OnTriggerEnter(Collider other)
@@ -85,17 +62,8 @@ public class BallController : MonoBehaviour
             Debug.Log("Out of Bounds");
             SetBallToStart();
             ballStopped = true;
-            throws++;         
+            //throws++;         
         }        
-    }
-    private void OnCollisionEnter(Collision collision)
-    {   // if collide w pin, check if pin is down (++score)
-        if (collision.gameObject.tag == "Pin")
-        {
-            Debug.Log("Hit pin");
-            pinDown = true;
-            score++;
-        }
     }
     private void ballShoot()
     {
@@ -153,54 +121,13 @@ public class BallController : MonoBehaviour
         }
         //Vector3 orginalPosition = GameObject.FindWithTag("Pin").transform.position;
         //gameObject.transform.position = orginalPosition;
-        throws = 0;
-        frame++;
+        //throws = 0;
+        //frame++;
     }
     public void GameOver()
     {
         ResetAll();
-        winTextObject.SetActive(true);
-        accuracy = (score / 300) * 100;
-        //accuracyText = accuracy; // need to convert the float to gameobject ??
-        accuracyText.SetActive(true);
-    }
-    public void AimGuide()
-    {
-        // Get the direction the camera is facing, constrained to the Y-axis only
-        Vector3 cameraForward = Camera.main.transform.forward;
-        cameraForward.y = 0; 
-
-        // Calculate the new rotation that matches the camera's facing direction
-        Quaternion targetRotation = Quaternion.LookRotation(cameraForward);
-
-        // Smoothly interpolate between the current rotation and the target rotation
-        Aim.transform.rotation = Quaternion.Slerp
-            (Aim.transform.rotation, targetRotation, Time.deltaTime * 50f);
-    }
-    public void ScoreUpdate()
-    {
-        // get char from current frame
-        // replace char with current score
-        //move to next char
-
-        //parse string to convert it to int to be added later
-        static int ParseString(string Frame1A)
-        {
-            int num = 0;
-            num = int.Parse(Frame1A);
-            return num;
-        }
-
-        Transform found = ScoreBoardCanvas.transform.Find("FrameScores/Frame 2/Frame2A");
-        if (found && found.TryGetComponent<TextMeshProUGUI>(out var frametext)) {
-            frametext.text = "0";
-        }
-        //Frame1A.text = $"{score}";
-        //Frame1B.text = $"{score}";
-        //// int frametotal is frame A + B
-        ////frameTotal = Frame1A + Frame1B;
-        //// other frametotals are previous frametotal plus current frametotal
-        //Frame1T.text = $"{score}";
+        winTextObject.SetActive(true);       
     }
 }
 //if ball velocity reaches certain point, reset position (it gets too slow before reset is recognized)
