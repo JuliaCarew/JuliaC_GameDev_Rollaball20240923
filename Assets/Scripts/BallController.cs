@@ -55,6 +55,10 @@ public class BallController : MonoBehaviour
         }*/
         lastPosition = transform.position;
     }
+    private void OnDrawGizmos()
+    {
+        
+    }
     private void OnTriggerEnter(Collider other)
     {   // reset ball position if out of bounds
         if(other.gameObject.tag == "OutOfBounds")
@@ -65,8 +69,25 @@ public class BallController : MonoBehaviour
             //throws++;         
         }        
     }
+    /*void PlayerInput()
+    {
+        //recieve player's input from axis position of mouse
+        Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0 , Input.GetAxisRaw("Vertical"));
+    }*/
     private void ballShoot()
     {
+        //recieve player's input from axis position of mouse
+       // Vector3 shootRotation = new Vector3
+        //    (Input.GetAxisRaw("Horizontal"), 0,0);
+
+        // get variable input from PlayerInput()
+        // set transform.rotation/forward/LookAt to input's vector
+       // rb_ball.transform.forward = shootRotation;
+
+        // shoot direction needs to take input at the X rotation, 0, 0 ??
+        // need to make work so the ball's forward position is the mouse position
+        //Vector3 shootDirection = new Vector3(shootRotation, 0,0);
+
         Aim.gameObject.SetActive(false);
         rb_ball.isKinematic = false;
         
