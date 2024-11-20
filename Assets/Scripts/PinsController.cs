@@ -7,12 +7,17 @@ using UnityEngine.SocialPlatforms.Impl;
 public class PinsController : MonoBehaviour
 {
     public static int score = 0;
-    private Vector3[] initialPinPositions; // Array to store initial pin positions
-    private Quaternion[] initialPinRotations; // Array to store initial pin rotations
-    private Rigidbody[] pinRigidbodies;
-    private GameObject[] pins; 
+    public Vector3[] initialPinPositions; // Array to store initial pin positions
+    public Quaternion[] initialPinRotations; // Array to store initial pin rotations
+    public Rigidbody[] pinRigidbodies;
+    public GameObject[] pins;
+    public bool isKnocked;
 
-    private void Start()
+    void Awake()
+    {
+        isKnocked = false; // Tracks if the pin has been knocked down
+    }
+    void Start()
     {
         // Get all pins at the start of the game and store their initial positions/rotations
         pins = GameObject.FindGameObjectsWithTag("Pin");
@@ -28,37 +33,28 @@ public class PinsController : MonoBehaviour
         }
     }
 
-     private void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {   
-         if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player")) // move this check to PinState?
         {
             // Check if the pin is knocked over
             foreach (GameObject pin in pins)
-            {
-                Rigidbody pinRb = pin.GetComponent<Rigidbody>();
-
-                if (pinRb != null)
+            {               
+                // Ensure we count the pin only once
+                if (!pin.GetComponent<PinState>().isKnocked)
                 {
-                    // Check if the pin is tilted beyond a threshold
-                    if (Mathf.Abs(pin.transform.eulerAngles.x) > 5f || Mathf.Abs(pin.transform.eulerAngles.z) > 5f)
-                    {
-                        // Ensure we count the pin only once
-                        if (!pin.GetComponent<PinState>().isKnocked)
-                        {
-                            pin.GetComponent<PinState>().isKnocked = true;
-                            score++;
-                        }
-                    }
+                    Debug.Log("pin isKnocked"); // not appearing 
+                    pin.GetComponent<PinState>().isKnocked = true;
+                    score++;
                 }
             }
         }
     }
-   /// <summary>
-    /// Resets all pins to their initial positions and rotations.
-    /// </summary>
     public void ResetPins()
     {
-       for (int i = 0; i < pins.Length; i++)
+        Debug.Log("resetting pins");
+
+        for (int i = 0; i < pins.Length; i++)
         {
             pins[i].transform.position = initialPinPositions[i];
             pins[i].transform.rotation = initialPinRotations[i];
@@ -77,12 +73,10 @@ public class PinsController : MonoBehaviour
         }
 
         // Reset the score for the new throw
-        score = 0;
-    
+        score = 0;    
     }
-    // private Vector3 GetInitialPinPosition(GameObject pin)
-    // {
-    //     // Store or retrieve initial pin positions
-    //     return pin.transform.position; // Placeholder, modify as needed to get initial positions
-    // }
 }
+// delay a few seconds before resetting the pins at each frame,
+// maybe on-screen UI showing frame complete, moving on to frame _
+// reverse the isKnocked check, if isKnocked = true, increment score
+// & in PinsState, check collision with the player

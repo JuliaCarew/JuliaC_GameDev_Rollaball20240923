@@ -34,7 +34,7 @@ public class ScoreBoardController : MonoBehaviour
             //UpdateScore(knockedPins);
         }
     }
-    private System.Collections.IEnumerator HandleThrow()
+    private IEnumerator HandleThrow()
     {
         waitingForThrow = true;
 
@@ -49,10 +49,7 @@ public class ScoreBoardController : MonoBehaviour
         PinsController.ResetPins();
         waitingForThrow = false;
     }
-    /// <summary>
-    /// Updates the scoreboard based on the number of pins knocked over.
-    /// </summary>
-    /// <param name="knockedPins">Number of pins knocked over in this throw.</param>
+
     public void UpdateScore(int knockedPins)
     {
         if (currentFrame >= 10)
@@ -91,9 +88,7 @@ public class ScoreBoardController : MonoBehaviour
             PinsController.ResetPins(); // Reset pins for the next frame
         }
     }
-    /// <summary>
-    /// Updates the total score for the current frame and overall game.
-    /// </summary>
+ 
     private void UpdateFrameTotal()
     {
          int frameTotal = frameScores[currentFrame, 0] + frameScores[currentFrame, 1];

@@ -54,9 +54,7 @@ public class BallController : MonoBehaviour
         AimAtMouse();
         ballShoot();
     }
-    /// <summary>
-    /// Rotates the player to face the mouse position in world space.
-    /// </summary>
+
     private void AimAtMouse()
     {
         Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
@@ -75,13 +73,16 @@ public class BallController : MonoBehaviour
         if(other.gameObject.tag == "OutOfBounds")
         {
             Debug.Log("Out of Bounds");
-            SetBallToStart();
+            SetBallToStart(); // !!!
             ballStopped = true;
-        }        
+        }
+        if (other.gameObject.tag == "PickUp")
+        {
+            Debug.Log("Power up obtained");
+            // call the power up method in their script
+        }
     }
-    /// <summary>
-    /// Shoots the ball in the direction it's facing, with force based on hold duration.
-    /// </summary>
+
     private void ballShoot()
     {
         if (Input.GetMouseButton(0)) // Hold left mouse button
@@ -121,9 +122,6 @@ public class BallController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Resets the ball's position if its speed falls below the threshold.
-    /// </summary>
     private void CheckBallSpeed()
     {
         if (!ballStopped && rb_ball.velocity.magnitude < ballMagnitudeStopThreshold)
@@ -133,12 +131,9 @@ public class BallController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Resets the ball's position and stops its motion.
-    /// </summary>
     public void SetBallToStart() 
     {
-        StopBall();
+        StopBall(); // !!!
         Transform startPosition = GameObject.FindWithTag("StartPosition").transform;
 
         if (startPosition != null)
@@ -148,11 +143,11 @@ public class BallController : MonoBehaviour
         }
         
     }
-    public void StopBall()
+    public void StopBall() // !!! getting warning 'setting linear velocity of a kinematic body is not supported' !!!
     {
-        rb_ball.isKinematic = true;
+        rb_ball.isKinematic = false;
 
-        rb_ball.velocity = Vector3.zero;
+        rb_ball.velocity = Vector3.zero; 
         rb_ball.angularVelocity = Vector3.zero;
 
         Debug.Log("ballStopped = true");
@@ -160,7 +155,7 @@ public class BallController : MonoBehaviour
     }
     public void ResetAll()
     {   // delete all pins
-        SetBallToStart();
+        SetBallToStart(); 
         var Pins = GameObject.FindGameObjectsWithTag("Pin");
         foreach (GameObject BowlingPin in Pins)
         {

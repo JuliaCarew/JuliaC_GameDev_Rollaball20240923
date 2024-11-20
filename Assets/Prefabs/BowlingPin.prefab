@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3306685446680548777}
   - component: {fileID: 7108117784952347396}
   - component: {fileID: 4164785407438480526}
-  - component: {fileID: 6580922433456795743}
+  - component: {fileID: 8496789733445287825}
   m_Layer: 0
   m_Name: BowlingPin
   m_TagString: Pin
@@ -135,7 +135,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.015863594, y: 0.015863592, z: 0.04245911}
   m_Center: {x: 4.656613e-10, y: 0, z: 0.0024826901}
---- !u!114 &6580922433456795743
+--- !u!114 &8496789733445287825
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
