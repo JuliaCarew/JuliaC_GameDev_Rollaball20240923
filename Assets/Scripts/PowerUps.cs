@@ -43,7 +43,7 @@ public class PowerUps : MonoBehaviour
 
             // playerRef.transform.localScale += scaleChange;
             // playerRef.transform.position += positionChange;
-            Debug.Log("Player picked up the power BIG!");
+            //Debug.Log("Player picked up the power BIG!");
 
         }
         if (randomPowerUp == 1)

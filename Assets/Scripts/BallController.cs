@@ -26,33 +26,23 @@ public class BallController : MonoBehaviour
     public float maxHoldDuration = 5f;
     public float forceMultiplier = 50f;
     public float holdDuration = 0f;
+    // References
+    public PinsController pinsController;
+    public ScoreBoardController scoreBoardController;
+     private PowerUps powerUps;
     
     private void Start()
     {
-        if (cameraRef == null)
-        {
-            cameraRef = Camera.main;
-        }
-
-        // Ensure critical references are assigned
-        if (ball == null || rb_ball == null)
-        {
-            Debug.LogError("Ball or Rigidbody reference is missing!");
-            return;
-        }
-
         ballStopped = true;
 
         winTextObject?.SetActive(false);
         holdKeyObject?.SetActive(false);
-
     }
     void Update()
     {
-         if (cameraRef == null || ball == null || rb_ball == null) return;
-
         AimAtMouse();
         ballShoot();
+        CheckBallSpeed();
     }
 
     private void AimAtMouse()
@@ -64,6 +54,7 @@ public class BallController : MonoBehaviour
         {
             Vector3 point = ray.GetPoint(rayDistance);
             Vector3 direction = (point - ball.transform.position).normalized;
+
             // Rotate the ball to face the mouse position
             ball.transform.forward = new Vector3(direction.x, 0, direction.z);
         }
@@ -72,100 +63,83 @@ public class BallController : MonoBehaviour
     {   // reset ball position if out of bounds
         if(other.gameObject.tag == "OutOfBounds")
         {
-            Debug.Log("Out of Bounds");
-            SetBallToStart(); // !!!
-            ballStopped = true;
+            //Debug.Log("Out of Bounds");
         }
         if (other.gameObject.tag == "PickUp")
         {
-            Debug.Log("Power up obtained");
-            // call the power up method in their script
+            //Debug.Log("Power up obtained!");
+            //PowerUp(powerReturned);
         }
     }
 
     private void ballShoot()
     {
-        if (Input.GetMouseButton(0)) // Hold left mouse button
+       if (Input.GetMouseButton(0)) // Hold left mouse button
         {
             holdDuration += Time.deltaTime;
             holdDuration = Mathf.Clamp(holdDuration, 0, maxHoldDuration);
 
-            holdKeyObject?.SetActive(true); // Display holdKey UI
+            holdKeyObject?.SetActive(true); 
         }
 
         if (Input.GetMouseButtonUp(0)) // Release left mouse button
         {
-            ballStopped = false;
-            rb_ball.isKinematic = false;
+            if (ballStopped)
+            {
+                ballStopped = false;
+                rb_ball.isKinematic = false; 
 
-            float force = holdDuration * forceMultiplier;
-            rb_ball.AddForce(ball.transform.forward * force, ForceMode.Impulse);
+                float force = holdDuration * forceMultiplier;
+                rb_ball.AddForce(ball.transform.forward * force, ForceMode.Impulse);
 
-            holdDuration = 0f; // Reset hold duration
-            holdKeyObject?.SetActive(false);
-        }
-
-        Aim.gameObject.SetActive(false);
-        rb_ball.isKinematic = false;
-        
-        // shoot ball is press space
-        if (Input.GetKeyDown("space") && holdDuration < 5f)
-        {
-            ballStopped = false;
-            rb_ball.AddForce(new Vector3(0, 0, 50), ForceMode.Impulse);
-            rb_ball.AddForce(Aim.transform.forward * 25, ForceMode.VelocityChange);
-        }
-        //set up hold shoot - display ui w it
-        else 
-        {
-            ballStopped = true;
+                holdDuration = 0f;
+                holdKeyObject?.SetActive(false);
+            }
         }
     }
 
     private void CheckBallSpeed()
     {
-        if (!ballStopped && rb_ball.velocity.magnitude < ballMagnitudeStopThreshold)
+       if (!ballStopped && rb_ball.velocity.magnitude < ballMagnitudeStopThreshold)
         {
-            //Debug.Log("CheckBallSpeed running, Resetting position.");
-            SetBallToStart();
+            //Debug.Log("Ball slowed down, resetting...");
+            ballStopped = true;
+            Invoke(nameof(ResetBallAndPins), 2f); // Add a delay for resetting
         }
     }
-
-    public void SetBallToStart() 
+    void ResetBallAndPins()
     {
-        StopBall(); // !!!
-        Transform startPosition = GameObject.FindWithTag("StartPosition").transform;
+        //Debug.Log("ResetBallAndPins called");
+
+        if (pinsController == null || scoreBoardController == null)
+        {
+            return;
+        }
+
+        // Reset the pins and ball before updating the score
+        pinsController.ResetPins();
+        SetBallToStart();
+
+        // Update the score after resetting
+        scoreBoardController.UpdateScore(PinsController.score);
+    }
+    public void SetBallToStart()
+    {
+        StopBall();
+        Transform startPosition = GameObject.FindWithTag("StartPosition")?.transform;
 
         if (startPosition != null)
         {
-            rb_ball.transform.position = startPosition.transform.position;
-            rb_ball.transform.rotation = startPosition.transform.rotation;
+            rb_ball.transform.position = startPosition.position;
+            rb_ball.transform.rotation = startPosition.rotation;
         }
-        
     }
-    public void StopBall() // !!! getting warning 'setting linear velocity of a kinematic body is not supported' !!!
+    public void StopBall()
     {
-        rb_ball.isKinematic = false;
-
-        rb_ball.velocity = Vector3.zero; 
+        rb_ball.isKinematic = false; // Ensure it can respond to velocity changes
+        rb_ball.velocity = Vector3.zero;
         rb_ball.angularVelocity = Vector3.zero;
-
-        Debug.Log("ballStopped = true");
-        
-    }
-    public void ResetAll()
-    {   // delete all pins
-        SetBallToStart(); 
-        var Pins = GameObject.FindGameObjectsWithTag("Pin");
-        foreach (GameObject BowlingPin in Pins)
-        {
-            BowlingPin.SetActive(false);
-        }
-    }
-    public void GameOver()
-    {
-        ResetAll();
-        winTextObject.SetActive(true);       
+        rb_ball.isKinematic = true; // Restore kinematic state if needed
+        //Debug.Log("Ball stopped.");
     }
 }
-//if ball velocity reaches certain point, reset position (it gets too slow before reset is recognized)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ScoreBoardController : MonoBehaviour
 {
-    public PinsController PinsController;
+    public PinsController pinsController;
 
     // Score UI
     [SerializeField] private TextMeshProUGUI[] frameA;
@@ -18,83 +18,74 @@ public class ScoreBoardController : MonoBehaviour
     public GameObject accuracyText;
 
     // score vriables
-     private int[,] frameScores = new int[10, 2];
-    public int[] frameTotals = new int[10];
-   private int currentFrame = 0;
+    private int[,] frameScores = new int[10, 2]; // ints for each frame score structure
+    private int[] frameTotals = new int[10]; // Total score per frame
+    private int currentFrame = 0; 
     private int currentThrow = 0; // 0 for first throw, 1 for second throw
-    private bool waitingForThrow = false;
+    //private bool waitingForThrow = false;
     private float accuracy;
+    int score = PinsController.score;
 
     void Update()
     {
-         if (Input.GetMouseButtonUp(0) && !waitingForThrow) // Simulate a throw with the space key
+        // Display the score for the current frame
+        if (currentFrame < 10)
         {
-            StartCoroutine(HandleThrow());
-            //int knockedPins = PinsController.score; // Use the score from PinsController
-            //UpdateScore(knockedPins);
+            // Update score display for the current frame
+            if (currentThrow == 0)
+            {
+                frameA[currentFrame].text = score.ToString(); // Show score for first throw
+                Debug.Log($"displaying score: {score} of FrameA - {currentFrame}");
+            }
+            else if (currentThrow == 1)
+            {
+                frameB[currentFrame].text = score.ToString(); // Show score for second throw
+                Debug.Log($"displaying score: {score} of FrameB - {currentFrame}");
+            }
+
+            // Update total score after both throws
+            if (currentThrow == 1)
+            {
+                frameTotals[currentFrame] = frameScores[currentFrame, 0] + frameScores[currentFrame, 1];
+                frameT[currentFrame].text = frameTotals[currentFrame].ToString(); // Display total for current frame
+                Debug.Log($"displaying Total score: {score} of FrameT - {currentFrame}");
+            }
         }
-    }
-    private IEnumerator HandleThrow()
-    {
-        waitingForThrow = true;
-
-        // Simulate the throw and wait for it to finish
-        yield return new WaitForSeconds(2f); // Adjust based on actual gameplay mechanics
-        int knockedPins = PinsController.score;
-
-        // Update scores for the current frame and throw
-        UpdateScore(knockedPins);
-
-        // Reset the pins for the next throw
-        PinsController.ResetPins();
-        waitingForThrow = false;
     }
 
     public void UpdateScore(int knockedPins)
     {
         if (currentFrame >= 10)
         {
-            Debug.Log("Game over! All frames completed.");
+            Debug.LogWarning("All frames are completed. No more score updates allowed.");
             return;
         }
 
-        // Assign the score to the current throw
-        if (currentThrow == 0)
+        if (currentThrow == 0) // First throw
         {
             frameScores[currentFrame, 0] = knockedPins;
-            frameA[currentFrame].text = knockedPins.ToString();
             currentThrow = 1;
 
-             // If it's a strike, skip the second throw
+            // Handle strike (end frame immediately)
             if (knockedPins == 10 && currentFrame < 9)
             {
-                UpdateFrameTotal();
+                frameTotals[currentFrame] = frameScores[currentFrame, 0];
+                frameT[currentFrame].text = frameTotals[currentFrame].ToString();
                 currentFrame++;
                 currentThrow = 0;
-                PinsController.ResetPins(); // Reset pins for the next frame
-             }
+                pinsController.ResetPins(); // Reset pins after a strike
+            }
         }
-        else if (currentThrow == 1)
+        else if (currentThrow == 1) // Second throw
         {
             frameScores[currentFrame, 1] = knockedPins;
-            frameB[currentFrame].text = knockedPins.ToString();
-
-            // Update the frame total
-            UpdateFrameTotal();
-
-            // Move to the next frame
+            frameTotals[currentFrame] = frameScores[currentFrame, 0] + frameScores[currentFrame, 1];
+            frameT[currentFrame].text = frameTotals[currentFrame].ToString(); // Display total score
+            
+            // Move to the next frame after second throw
             currentFrame++;
             currentThrow = 0;
-            PinsController.ResetPins(); // Reset pins for the next frame
+            pinsController.ResetPins(); // Reset pins after second throw
         }
-    }
- 
-    private void UpdateFrameTotal()
-    {
-         int frameTotal = frameScores[currentFrame, 0] + frameScores[currentFrame, 1];
-        frameTotals[currentFrame] = frameTotal;
-
-        // Display the total for the current frame
-        frameT[currentFrame].text = frameTotal.ToString();
     }
 }
