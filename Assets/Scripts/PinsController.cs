@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager.UI;
+//using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -48,7 +48,7 @@ public class PinsController : MonoBehaviour
             }
         }
     }
-    public void ResetPins()
+    public void ResetPins() 
     {
         // Reset pins to initial positions and set their state back to unknocked
         for (int i = 0; i < pins.Length; i++)
