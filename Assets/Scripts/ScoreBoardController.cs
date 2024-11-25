@@ -6,6 +6,7 @@ using UnityEngine;
 public class ScoreBoardController : MonoBehaviour
 {
     public PinsController pinsController;
+    public PinState pinState;
 
     // Score UI
     [SerializeField] private TextMeshProUGUI[] frameA;
@@ -24,7 +25,7 @@ public class ScoreBoardController : MonoBehaviour
     private int currentThrow = 0; // 0 for first throw, 1 for second throw
     //private bool waitingForThrow = false;
     private float accuracy;
-    int score = PinsController.score;
+    int score = PinState.score;
 
     void Update()
     {
@@ -35,12 +36,12 @@ public class ScoreBoardController : MonoBehaviour
             if (currentThrow == 0)
             {
                 frameA[currentFrame].text = score.ToString(); // Show score for first throw
-                Debug.Log($"displaying score: {score} of FrameA - {currentFrame}");
+                //Debug.Log($"displaying score: {score} of FrameA - {currentFrame}");
             }
             else if (currentThrow == 1)
             {
                 frameB[currentFrame].text = score.ToString(); // Show score for second throw
-                Debug.Log($"displaying score: {score} of FrameB - {currentFrame}");
+                //Debug.Log($"displaying score: {score} of FrameB - {currentFrame}");
             }
 
             // Update total score after both throws
@@ -48,7 +49,7 @@ public class ScoreBoardController : MonoBehaviour
             {
                 frameTotals[currentFrame] = frameScores[currentFrame, 0] + frameScores[currentFrame, 1];
                 frameT[currentFrame].text = frameTotals[currentFrame].ToString(); // Display total for current frame
-                Debug.Log($"displaying Total score: {score} of FrameT - {currentFrame}");
+                //Debug.Log($"displaying Total score: {score} of FrameT - {currentFrame}");
             }
         }
     }
@@ -66,14 +67,14 @@ public class ScoreBoardController : MonoBehaviour
             frameScores[currentFrame, 0] = knockedPins;
             currentThrow = 1;
 
-            // Handle strike (end frame immediately)
+            // Handle strike (end frame immediately & reset pins)
             if (knockedPins == 10 && currentFrame < 9)
             {
                 frameTotals[currentFrame] = frameScores[currentFrame, 0];
                 frameT[currentFrame].text = frameTotals[currentFrame].ToString();
                 currentFrame++;
                 currentThrow = 0;
-                pinsController.ResetPins(); // Reset pins after a strike
+                pinsController.ResetPins(); 
             }
         }
         else if (currentThrow == 1) // Second throw

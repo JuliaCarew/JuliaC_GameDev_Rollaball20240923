@@ -76,16 +76,19 @@ public class BallController : MonoBehaviour
     {
        if (Input.GetMouseButton(0)) // Hold left mouse button
         {
+            //Debug.Log($"Set ball speed: {holdDuration}");
             holdDuration += Time.deltaTime;
             holdDuration = Mathf.Clamp(holdDuration, 0, maxHoldDuration);
 
-            holdKeyObject?.SetActive(true); 
+            holdKeyObject?.SetActive(true);
+            // TODO: get tween for holdkey UI
         }
 
         if (Input.GetMouseButtonUp(0)) // Release left mouse button
         {
             if (ballStopped)
             {
+                //Debug.Log("Ball shot");
                 ballStopped = false;
                 rb_ball.isKinematic = false; 
 
@@ -100,7 +103,9 @@ public class BallController : MonoBehaviour
 
     private void CheckBallSpeed()
     {
-       if (!ballStopped && rb_ball.velocity.magnitude < ballMagnitudeStopThreshold)
+        //Debug.Log("Check Ball Speed called");
+
+        if (!ballStopped && rb_ball.velocity.magnitude < ballMagnitudeStopThreshold)
         {
             //Debug.Log("Ball slowed down, resetting...");
             ballStopped = true;
@@ -109,22 +114,23 @@ public class BallController : MonoBehaviour
     }
     void ResetBallAndPins()
     {
-        //Debug.Log("ResetBallAndPins called");
+        //Debug.Log("Reset Ball And Pins called");
 
         if (pinsController == null || scoreBoardController == null)
         {
             return;
         }
 
-        // Reset the pins and ball before updating the score
+        // Reset the pins and ball before updating the score (wait a few seconds for pins to fall)
         pinsController.ResetPins();
         SetBallToStart();
 
         // Update the score after resetting
-        scoreBoardController.UpdateScore(PinsController.score);
+        scoreBoardController.UpdateScore(PinState.score);
     }
     public void SetBallToStart()
     {
+        //Debug.Log("Set Ball To Start called");
         StopBall();
         Transform startPosition = GameObject.FindWithTag("StartPosition")?.transform;
 
@@ -136,6 +142,7 @@ public class BallController : MonoBehaviour
     }
     public void StopBall()
     {
+        //Debug.Log("Stop Ball called");
         rb_ball.isKinematic = false; // Ensure it can respond to velocity changes
         rb_ball.velocity = Vector3.zero;
         rb_ball.angularVelocity = Vector3.zero;

@@ -1,17 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-//using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class PinsController : MonoBehaviour
 {
-    public static int score = 0;
     public Vector3[] initialPinPositions;
     public Quaternion[] initialPinRotations;
     public Rigidbody[] pinRigidbodies;
     public GameObject[] pins;
-     public bool isKnocked;
+    public bool isKnocked;
 
     void Awake()
     {
@@ -33,21 +31,23 @@ public class PinsController : MonoBehaviour
             pinRigidbodies[i] = pins[i].GetComponent<Rigidbody>();
         }
     }
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ball"))
-        {
-            foreach (GameObject pin in pins)
-            {
-                if (!pin.GetComponent<PinState>().isKnocked) // Only count knocked pins once
-                {
-                    pin.GetComponent<PinState>().isKnocked = true;
-                    score++; // Increment score for each knocked pin
-                    Debug.Log("Pin knocked! Current score: " + score);
-                }
-            }
-        }
-    }
+    //public void OnCollisionEnter(Collision collision) // FIXME: no debug logs being called
+    //{
+    //    if (collision.gameObject.CompareTag("Ball"))
+    //    {
+    //        Debug.Log("Ball collided with pin");
+    //        foreach (GameObject pin in pins)
+    //        {
+    //            if (!pin.GetComponent<PinState>().isKnocked) // Only count knocked pins once
+    //            {
+    //                Debug.Log($"Pin {pin} is knocked");
+    //                pin.GetComponent<PinState>().isKnocked = true;
+    //                score++; // Increment score for each knocked pin
+    //                Debug.Log($"Pin knocked! Current score: {score}"); 
+    //            }
+    //        }
+    //    }
+    //}
     public void ResetPins() 
     {
         // Reset pins to initial positions and set their state back to unknocked
@@ -68,3 +68,5 @@ public class PinsController : MonoBehaviour
         }
     }
 }
+// pins need to be counted after more of a delay, so wait about 2 seconds for everything to fall over
+// pins still not being added & displayed as score

@@ -645,7 +645,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Version: 3.0.0
+  m_text: 'Version: 4.0.0
 
 '
   m_isRightToLeft: 0
